@@ -12,14 +12,38 @@ import theme from "../theme";
 import ButtonTransparent from "../Components/ButtonTransparent";
 import useFetch from "../Hooks/useFetch";
 import CardMovie from "../Components/CardMovie";
-const screenHeight = Dimensions.get("window").height;
+import TinderCard from "react-tinder-card";
+import { useRoute } from "@react-navigation/native";
+
+
 
 const Movies = () => {
-  const [movies] = useFetch(
-    "https://api.themoviedb.org/3/movie/popular?api_key=40009de0f135cfd09989d99f18892b45&language=en-US&page=1"
-  );
+  const [lastDirection, setLastDirection] = useState();
+
+  const route = useRoute()
+  const {data} = route.params
+  
+
+      
+  const [movies, setMovies] = useState(data);
 
   const IMAGE_URL = "https://image.tmdb.org/t/p/w500/";
+
+
+  const swiped = (direction, id) => {
+    console.log("removing: " + id);
+    setMovies((current) => current.filter((movie) => movie.id !== id));
+    setLastDirection(direction);
+    console.log(direction);
+  };
+
+ 
+
+
+//   const outOfFrame = (id) => {
+    
+// };
+
 
   return (
     <View style={styles.container}>
@@ -45,14 +69,22 @@ const Movies = () => {
           <ButtonTransparent btnStyle={styles.btnStyle} text={"Catégories"} />
         </View>
 
-        <View style={styles.movies}>
+        <View style={styles.cardContainer}>
           {movies?.map((movie) => (
-            <CardMovie
-              text={movie.original_title}
-              image={{ uri: `${IMAGE_URL}${movie.poster_path}` }}
-            />
+            <TinderCard
+              onSwipe={(dir) => swiped(dir, movie.id)}
+            //   onCardLeftScreen={() => outOfFrame(movie.id)}
+            >
+              <View style={styles.movies}>
+                <CardMovie
+                  image={{ uri: `${IMAGE_URL}${movie.poster_path}` }}
+                />
+              </View>
+            </TinderCard>
           ))}
+
         </View>
+          {!movies.length && <Text style={styles.text}>Plus de films disponible...</Text> }
       </ScrollView>
     </View>
   );
@@ -66,10 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#20262E",
     padding: "5%",
   },
-//   contentContainer: {
-//     flex: 1,
-//     width: "100%",
-//   },
+
   header: {
     display: "flex",
     flexDirection: "row",
@@ -115,10 +144,24 @@ const styles = StyleSheet.create({
     width: "30%",
   },
 
-  movies: {
+  cardContainer: {
+    width: "10%",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-    height: "100%",
+    justifyContent: "center",
+  },
+
+  //   movies: {
+  //     display: "flex",
+  //     alignItems: "center",
+  //     justifyContent: "space-between",
+  //     height: "100%",
+  //   },
+  movies: {
+    position: "absolute",
+
+    borderColor: "#93ABB0",
+    borderRadius: 25,
+    resizeMode: "cover",
   },
 });

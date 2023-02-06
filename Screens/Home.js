@@ -8,9 +8,15 @@ import {
 import React from "react";
 import CustomBtn from "../Components/CustomBtn";
 import { useNavigation } from "@react-navigation/native";
+import useFetch from "../Hooks/useFetch";
 
 const Home = () => {
     const navigation = useNavigation()
+
+    var [data] = useFetch(
+      "https://api.themoviedb.org/3/trending/all/day?api_key=40009de0f135cfd09989d99f18892b45"
+      );
+      
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -19,7 +25,7 @@ const Home = () => {
       >
         <View style={styles.content}>
           <CustomBtn text={"Inscription"} />
-          <CustomBtn text={"Movies"} onPress={()=>navigation.push("Movies")} />
+          <CustomBtn text={"Movies"} onPress={()=>navigation.push("Movies", {data: data})} />
         </View>
       </ImageBackground>
 

@@ -20,18 +20,20 @@ const CardMovie = ({ text, image, card }) => {
 export default CardMovie;
 
 const styles = StyleSheet.create({
+
   card: {
+    position: 'absolute',
     width: 320,
     height: 500,
-    borderWidth: 1,
-    borderColor: "#93ABB0",
     borderRadius: 25,
-    backgroundColor: "#FFF",
-    marginBottom: 21,
+    borderColor: "#93ABB0",
+    borderWidth: 1,
+    resizeMode: 'cover',
   },
   image: {
-    width: "100%",
+    width: 320,
     height: "100%",
     borderRadius: 25,
+    resizeMode: 'cover',
   },
 });
